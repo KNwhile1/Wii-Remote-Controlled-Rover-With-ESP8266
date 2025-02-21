@@ -4,7 +4,7 @@ This project demonstrates how to control a rover using a Nintendo Wii Remote, co
 
 ## Required Components (images)
 - Rover shell
-<img src="download1.png" alt="Description of the image" width="100"/>
+<img src="download1.png" alt="Description of the image" width="250"/>
 
 - ESP82866
 <img src="download2.png" alt="Description of the image" width="500"/>
