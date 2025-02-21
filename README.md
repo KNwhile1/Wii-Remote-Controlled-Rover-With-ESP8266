@@ -66,7 +66,7 @@ In conclusion, this project successfully demonstrates how to wirelessly control 
 # Problem(s) Encountered
 See /Problems_Encountered ---> Problems Encountered.txt
 
-# Purchase Link(s)
+# Project Purchase Links
 See /Project Purchase Links ---> Project Purchase Links.txt
 
 # Additional Information Links
