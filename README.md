@@ -49,8 +49,7 @@ This project demonstrates how to control a rover using a Nintendo Wii Remote, co
 
 ### Software Setup
 
-**Pairing the Wii Remote**:
-    - Pair the Wii Remote with the ESP8266 using Bluetooth. You will need to press 1 & 2 botton at the same time     to connect to the ESP8266. The Player 1 LED will be on when it's connected.
+**Pairing the Wii Remote**: Pair the Wii Remote with the ESP8266 using Bluetooth. You will need to press 1 & 2 botton at the same time to connect to the ESP8266. The Player 1 LED will be on when it's connected.
 
 ## Conclusion
 In conclusion, this project successfully demonstrates how to wirelessly control a rover using a Nintendo Wii Remote and an ESP8266. By integrating Bluetooth communication, motor drivers, and a user-friendly interface, users can enjoy intuitive control of the rover's movement. With customizable features and real-time feedback, this project offers a seamless experience for remote rover operation.
