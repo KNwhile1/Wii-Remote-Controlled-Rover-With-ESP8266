@@ -73,6 +73,3 @@ See /Project Purchase Links ---> Project Purchase Links.txt
 
 # Additional Information Links
 - [Arduino-ESP32Wiimote librarie](https://github.com/bigw00d/Arduino-ESP32Wiimote)
-- [How to assemble the Tinkerkit Braccio robot]()
-- [OSH: Schematics (Schematics in .pdf)]()
-- [OSH: Schematics (CAD files) (**Direct download**)]()
