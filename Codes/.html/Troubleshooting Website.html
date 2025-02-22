@@ -1,0 +1,318 @@
+<!-- =====================================================================================================================
+= Name: Troubleshooting Website.html
+= Description: This program uses the HTML file as the Troubleshooting Website
+= Compiler: None.
+= Usage: Troubleshooting Website
+= Restriction(s): None.
+= History: History: 11/24/2024 | K. Niamba / Creation;
+=          2/21/2025 | K. Niamba / Modification -> Documentation translation (FR to ENG)
+===================================================================================================================== --->
+
+<!-- =====================================================================================================================
+= Initialization Block
+===================================================================================================================== --->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Troubleshooting Website</title>
+    <style>
+        body {
+            background-color: rgb(255, 255, 255);
+        }
+
+        #commandHistory {
+            border: 1px solid #000;
+            padding: 10px;
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+<!-- =====================================================================================================================
+= Web Control Display Block
+===================================================================================================================== --->
+    <h1>Current Time</h1>
+    <div id="clock">Loading...</div>
+
+    <h1>Sensor Values in Volts (Raw) and Distance (Converted)</h1>
+    <p id="header1">Loading...</p>
+    <p id="header2">Loading...</p>
+    <p id="header3">Loading...</p>
+    <p id="brute4">Loading...</p>
+
+    <h1>Control of Each Actuator</h1>
+    <button id="front_right_on" onclick="controlWheel('front_right', 50)">Activate Front Right Wheel</button>
+    <button id="front_right_off" onclick="controlWheel('front_right', 0)">Stop Front Right Wheel</button><br>
+    <button id="front_left_on" onclick="controlWheel('front_left', 50)">Activate Front Left Wheel</button>
+    <button id="front_left_off" onclick="controlWheel('front_left', 0)">Stop Front Left Wheel</button><br>
+    <button id="rear_right_on" onclick="controlWheel('rear_right', 50)">Activate Rear Right Wheel</button>
+    <button id="rear_right_off" onclick="controlWheel('rear_right', 0)">Stop Rear Right Wheel</button><br>
+    <button id="rear_left_on" onclick="controlWheel('rear_left', 50)">Activate Rear Left Wheel</button>
+    <button id="rear_left_off" onclick="controlWheel('rear_left', 0)">Stop Rear Left Wheel</button>
+    <button onclick="toggleLED('on')">Turn On</button>
+    <button onclick="toggleLED('off')">Turn Off</button>
+
+    <h1>Display of ESP32 IP and MAC Address</h1>
+    <p id="ipMac">Loading...</p>
+
+    <h1>Command History</h1>
+    <div id="commandHistory">Loading...</div>
+
+<!-- =====================================================================================================================
+= JavaScript Block for Getting the Current Time
+===================================================================================================================== --->
+    <script>
+        function updateClock() {
+            var now = new Date();
+            var hours = now.getHours().toString().padStart(2, '0');
+            var minutes = now.getMinutes().toString().padStart(2, '0');
+            var seconds = now.getSeconds().toString().padStart(2, '0');
+
+            var currentTime = hours + ':' + minutes + ':' + seconds;
+            document.getElementById('clock').textContent = currentTime;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+
+<!-- =====================================================================================================================
+= JavaScript Block for Getting Raw Analog Value Converted to Centimeters from HC-SR04 Sensor
+===================================================================================================================== --->
+    <script>
+        function fetchSensorHC_SR04() {
+            console.log('Attempting to retrieve distance');
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://192.168.1.221/CapteurHC_SR04(1)', true);
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    console.log('Response received:', xhr.responseText);
+                    var raw1 = parseFloat(xhr.responseText);
+
+                    var distance1 = raw1 * 0.034 / 2;    // Conversion from raw to cm (approximate formula for HC-SR04)
+
+                    document.getElementById('header1').textContent = 'HC-SR04 Sensor: ' + raw1.toFixed(2) + ' (Raw), ' + distance1.toFixed(2) + ' (cm) ';
+
+                } else {
+                    console.error('Error during the request:', xhr.status, xhr.statusText);
+                    document.getElementById('header1').textContent = 'Loading Error';
+                }
+            };
+
+            xhr.onerror = function () {
+                console.error('Error during the request');
+                document.getElementById('header1').textContent = 'Loading Error';
+            };
+
+            xhr.send();
+        }
+
+        setInterval(fetchSensorHC_SR04, 2000);
+        fetchSensorHC_SR04();
+    </script>
+
+<!-- =====================================================================================================================
+= JavaScript Block for Getting Raw Analog Value Converted to Centimeters from Sharp 2D120X Sensor
+===================================================================================================================== --->
+    <script>
+        function fetchSensorSharp_2D120X() {
+            console.log('Attempting to retrieve distance');
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://192.168.1.221/CapteurSharp_2D120X(1)', true);
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    var raw2 = parseFloat(xhr.responseText);
+
+                    var voltage = raw3 * (5.0 / 1023.0); // Convert analog reading to voltage (5V system)
+
+                    var distance = (-6 * voltage) + 30;  // Convert voltage to distance (cm)
+
+                    // Updates the header with the values
+                    document.getElementById('header2').textContent = 'Sharp 2Y0A02 Sensor: ' + raw2.toFixed(2) + ' (Raw), ' + distance.toFixed(2) + ' (cm), ' + voltage.toFixed(2) + ' (V) ';
+
+                } else {
+                    console.error('Error during the request:', xhr.status, xhr.statusText);
+                    document.getElementById('header2').textContent = 'Loading Error';
+                }
+            };
+
+            xhr.onerror = function () {
+                console.error('Error during the request');
+                document.getElementById('header2').textContent = 'Loading Error';
+            };
+
+            xhr.send();
+        }
+
+        setInterval(fetchSensorSharp_2D120X, 2000);
+        fetchSensorSharp_2D120X();
+    </script>
+
+<!-- =====================================================================================================================
+= JavaScript Block for Getting Raw Analog Value Converted to Centimeters from Sharp 2Y0A02 Sensor
+===================================================================================================================== --->
+    <script>
+        function fetchSensorSharp_2Y0A02() {
+            console.log('Attempting to retrieve distance');
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://192.168.1.221/CapteurSharp_2Y0A02(1)', true);
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    console.log('Response received:', xhr.responseText);
+                    var raw3 = parseFloat(xhr.responseText);
+
+                    var voltage = raw3 * (5.0 / 1023.0); // Convert analog reading to voltage (5V system)
+
+                    var distance = (-9 * voltage) + 150; // Convert voltage to distance (cm)
+
+                    // Updates the header with the values
+                    document.getElementById('header3').textContent = 'Sharp 2D120X Sensor: ' + raw3.toFixed(2) + ' (Raw), ' + distance.toFixed(2) + ' (cm) ';
+
+
+                } else {
+                    console.error('Error during the request:', xhr.status, xhr.statusText);
+                    document.getElementById('header3').textContent = 'Loading Error';
+                }
+            };
+
+            xhr.onerror = function () {
+                console.error('Error during the request');
+                document.getElementById('header3').textContent = 'Loading Error';
+            };
+
+            xhr.send();
+        }
+
+        setInterval(fetchSensorSharp_2Y0A02, 2000);
+        fetchSensorSharp_2Y0A02();
+    </script>
+
+<!-- =====================================================================================================================
+= JavaScript Block for Getting the Raw Analog Value from the Photoresistor
+===================================================================================================================== --->
+    <script>
+        function fetchPhotoresistor() {
+            console.log('Attempting to retrieve the distance');
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://192.168.1.221/Photoresistance_Phares', true);
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    console.log('Response received:', xhr.responseText);
+                    var raw4 = parseFloat(xhr.responseText);
+                    document.getElementById('brute4').textContent = 'Light Sensor: ' + raw4.toFixed(2) + ' (Raw) ';
+
+                } else {
+                    console.error('Error during the request:', xhr.status, xhr.statusText);
+                    document.getElementById('brute4').textContent = 'Loading Error';
+                }
+            };
+
+            xhr.onerror = function () {
+                console.error('Error during the request');
+                document.getElementById('brute4').textContent = 'Loading Error';
+            };
+
+            xhr.send();
+        }
+
+        setInterval(fetchPhotoresistor, 2000);
+        fetchPhotoresistor();
+    </script>
+
+<!-- =====================================================================================================================
+= JavaScript Block to Control Each Actuator with Command History
+===================================================================================================================== --->
+    <script>
+        function controlWheel(wheel, inputValue) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://192.168.1.221/wheel/' + wheel + '?input_value=' + inputValue, true);
+            xhr.send();
+    
+            // Adds the command to the history
+            var historyDiv = document.getElementById('commandHistory');
+            var newCommand = document.createElement('div');
+            var action = inputValue === 0 ? 'Stopped' : `Activated at ${inputValue}%`;
+            newCommand.textContent = `Command sent: ${wheel} ${action}`;
+            historyDiv.appendChild(newCommand);
+    
+            // Limit history to 10 commands
+            if (historyDiv.children.length > 10) {
+                historyDiv.removeChild(historyDiv.firstChild);
+            }
+    
+            // Changes the color of the activated button
+            if (inputValue > 0) {
+                document.getElementById(wheel + '_on').style.backgroundColor = 'white';
+                document.getElementById(wheel + '_off').style.backgroundColor = '';
+            } else {
+                document.getElementById(wheel + '_off').style.backgroundColor = 'white';
+                document.getElementById(wheel + '_on').style.backgroundColor = '';
+            }
+        }
+    </script>
+
+<!-- =====================================================================================================================
+= JavaScript Block for Controlling the LED
+===================================================================================================================== --->
+    <script>
+        function toggleLED(state) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://192.168.1.221/led/' + state, true);
+            xhr.send();  
+    
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    console.log("LED " + state.toUpperCase() + " success!");
+                } else {
+                    console.error("Error sending LED " + state.toUpperCase() + " command");
+                }
+            };
+    
+            xhr.onerror = function () {
+                console.error("Communication error with ESP32");
+            };
+        }
+    </script>
+
+<!-- =====================================================================================================================
+= JavaScript Block for Getting the IP and MAC Address of the ESP32
+===================================================================================================================== --->
+    <script>
+        function fetchIpMac() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://192.168.1.221/ip_et_mac', true);
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    var responseText = xhr.responseText;
+                    var data = responseText.split(",");
+                    var ip = data[0];
+                    var mac = data[1];
+                    document.getElementById('ipMac').textContent = 'IP: ' + ip + ' | MAC: ' + mac;
+                } else {
+                    console.error('Error during the request:', xhr.status, xhr.statusText);
+                    document.getElementById('ipMac').textContent = 'Loading Error';
+                }
+            };
+
+            xhr.onerror = function () {
+                console.error('Error during the request');
+                document.getElementById('ipMac').textContent = 'Loading Error';
+            };
+
+            xhr.send();
+        }
+        setInterval(fetchIpMac, 10000);
+        fetchIpMac();
+    </script>
+</body>
+</html>
