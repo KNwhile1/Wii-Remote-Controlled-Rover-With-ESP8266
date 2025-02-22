@@ -30,6 +30,9 @@ This project demonstrates how to control a rover using a Nintendo Wii Remote, co
 - Sharp_2Y0A02
 <img src="download9.png" alt="Description of the image" width="500"/>
 
+- Raspberry Pi 4
+<img src="download11.png" alt="Description of the image" width="500"/>
+
 *See the **Project Purchase Links** category for purchase links*
 
 ## Features
