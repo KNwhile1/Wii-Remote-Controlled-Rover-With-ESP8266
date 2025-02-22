@@ -56,7 +56,7 @@ In conclusion, this project successfully demonstrates how to wirelessly control 
 
 *Representation of the project assembly*
 
-<img src="download10.png" alt="Description of the image" width="500"/>
+<img src="download10.png" alt="Description of the image" width="50"/>
 
 # Version of Functional Files for this Project
 - /Codes/.ino ---> **.ino**
