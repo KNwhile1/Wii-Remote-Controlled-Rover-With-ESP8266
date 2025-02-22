@@ -1,4 +1,4 @@
-# Wii Remote Controlled Rover with ESP8266
+# Wii Remote Controlled Rover with ESP8266 And Raspberry Pi 4
 
 This project demonstrates how to control a rover using a Nintendo Wii Remote, connected wirelessly to an ESP8266. The ESP8266 receives data from the Wii Remote and sends commands to the rover's motors, allowing the user to control the rover's movement remotely through an intuitive user interface that provides real-time feedback and customizable controls.
 
